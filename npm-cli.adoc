@@ -2,16 +2,13 @@
 
 This cheat sheet covers the most common and helpful commands and flags for the npm CLI.
 
-// TODO: something about npm comes with node
-
-npx
-Run a command from an npm package
-
 == Basic Usage
 
 `-v, --version`:: Prints the current version of npm you are using
 `<command> -h, --help`:: quick help on the specified command
 `-l`:: display full usage info
+
+`npx [command]`:: Run an arbitrary command from an npm module (either one installed locally, or fetched remotely)
 
 == Create a new Node.js application
 
@@ -32,27 +29,28 @@ Run a command from an npm package
 
 [cols="25,75"]
 |===
-|`---save-dev`
+|`--save-dev`
 | Installs the specifed module as a Development Dependecy
 
 |`-g`
 | Installs the module globally
 |===
 
-
 `npm install [--production]`:: Installs the modules specified in the package.json.  The `--production` flag will not install development dependencies
 
 `npm ci`:: similar to `npm install`, but for use in automated environments such as test platforms, continuous integration, and deployment
 
-npm uninstall
-Remove a package
+`npm uninstall <module>`:: remove a module
 
-npm outdated
-Check for outdated packages
+`npm outdated`:: Check for outdated modules
 
-npm update
-Update a package
+`npm update`:: Update modules to the latest version, respecting semver.
 
+`npm ls`:: List the installed modules
+
+`npm prune`:: Remove any extraneous modules
+
+`npm link`:: Symlink a package folder
 
 == NPM Scripts
 
@@ -62,84 +60,74 @@ Update a package
 
 == Publish a Node Module
 
+`npm whoami`:: Display the npm username
+
+`npm login`:: Login to the registry
+
+`npm version [options]`:: Bump the version of a module
+
+[cols="25,75"]
+|===
+|`<newversion>`
+| Bumps the version to the `<newversion>`.  ex: `npm version 1.1.0`
+
+|`major`
+| Bumps the major version by 1. ex: `npm version major` output: `v2.1.0`
+
+|`minor`
+| Bumps the minor verison by 1. ex: `npm version minor` output `v1.2.0`
+
+|`patch`
+| Bumps the patch version by 1. ex: `npm version patch` output: `v1.1.1`
+
+|`premajor`
+| Bumps the major version by 1, but as a prerelease. ex: `npm verison premajor` output: `v2.1.0-0`
+
+|`preminor`
+| Bumps the minor version by 1, but as a prerelease. ex: `npm verison preminor` output: `v1.2.0-0`
+
+|`prepatch`
+| Bumps the patch version by 1, but as a prerelease. ex: `npm verison prepatch` output: `v1.1.1-0`
+
+|`prerelease`
+| Bumps the prerelease version.  ex: `npm version prerelease` output: `1.1.0-1`
+
+|`--preid=<prerelease-id>`
+| Use a custom prerelease id tag.  ex: `npm version prelease --preid=beta` example output: `1.1.0-beta.0`
+
+|`from-git`
+| Use the latest git tag as the version
+|===
+
+`npm shrinkwrap`:: Lock down dependency versions for publication
+
+`npm publish`:: Publish a module
+
+`npm deprecate`:: Deprecate a version of a module
+
+`npm unpublish`:: Remove a module from the registry*
+
+`npm dist-tag`:: Modify package distribution tags
+
+`npm logout`:: Log out of the registry
+
+
 == Misc
 
-npm audit
-Run a security audit
+`npm audit`:: Run a security audit
 
-npm bugs
-Bugs for a package in a web browser maybe
+`npm bugs`:: Bugs for a module in a web browser
 
-npm config
-Manage the npm configuration files
+`npm docs`:: Docs for a module in a web browser
 
-npm docs
-Docs for a package in a web browser maybe
-
-npm fund
-Retrieve funding information
-
-npm ls
-List installed packages
-
-npm prune
-Remove extraneous packages
-
-// TODO: login to the registry?
-
-// TODO: npm publish
-
-// TODO: .npmrc
-// target another registry
-
-// TODO: Deprecate a module
-
-
-// TODO: something around global installs or one off usage, npx
-
-// TODO: dist-tag
-// checking
-// setting
-// using a canary tag
-
-// TODO: npm audit
-
-npm dist-tag
-Modify package distribution tags
-
-npm link
-Symlink a package folder
-
-
-
-npm shrinkwrap
-Lock down dependency versions for publication
-
-npm version
-Bump a package version
-
-npm pack
-Create a tarball from a package
-
-npm publish
-Publish a package
-
-npm deprecate
-Deprecate a version of a package
-
-npm unpublish
-Remove a package from the registry
+`npm fund`:: Retrieve funding information
 
 
 
 
-npm adduser
-Add a registry user account
 
-npm logout
-Log out of the registry
 
-npm whoami
-Display npm username
+
+
 
 
