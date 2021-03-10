@@ -1,10 +1,99 @@
 = NPM CLI -  Commands and Flags
 
-This cheat sheet covers the most common and helpful command and flags for the npm CLI.
+This cheat sheet covers the most common and helpful commands and flags for the npm CLI.
 
 // TODO: something about npm comes with node
 
-== Usage
+npx
+Run a command from an npm package
+
+== Basic Usage
+
+`-v, --version`:: Prints the current version of npm you are using
+`<command> -h, --help`:: quick help on the specified command
+`-l`:: display full usage info
+
+== Create a new Node.js application
+
+`npm init [--yes|-y|--scope]`:: Initialize a new Node.js Project,  Create a package.json file
+
+[cols="25,75"]
+|===
+|`--yes, -y`
+| Skip the init questionnaire
+
+|`--scope`
+| Create a scoped application/module
+|===
+
+== Install Node Modules
+
+`npm install <module_name>`:: Installs the specifed module as a Dependency
+
+[cols="25,75"]
+|===
+|`---save-dev`
+| Installs the specifed module as a Development Dependecy
+
+|`-g`
+| Installs the module globally
+|===
+
+
+`npm install [--production]`:: Installs the modules specified in the package.json.  The `--production` flag will not install development dependencies
+
+`npm ci`:: similar to `npm install`, but for use in automated environments such as test platforms, continuous integration, and deployment
+
+npm uninstall
+Remove a package
+
+npm outdated
+Check for outdated packages
+
+npm update
+Update a package
+
+
+== NPM Scripts
+
+`npm start`:: Run a predefined command specified in the `start` property of a package's `scripts` object.
+
+`npm run [script]::` Run a predefined command specified in the `[script]` property of package's `scripts` object
+
+== Publish a Node Module
+
+== Misc
+
+npm audit
+Run a security audit
+
+npm bugs
+Bugs for a package in a web browser maybe
+
+npm config
+Manage the npm configuration files
+
+npm docs
+Docs for a package in a web browser maybe
+
+npm fund
+Retrieve funding information
+
+npm ls
+List installed packages
+
+npm prune
+Remove extraneous packages
+
+// TODO: login to the registry?
+
+// TODO: npm publish
+
+// TODO: .npmrc
+// target another registry
+
+// TODO: Deprecate a module
+
 
 // TODO: something around global installs or one off usage, npx
 
@@ -15,214 +104,42 @@ This cheat sheet covers the most common and helpful command and flags for the np
 
 // TODO: npm audit
 
-== Create a new Node.js application
-
-// TODO: npm init [-y]
-
-== Install Node Modules
-
-// TODO:  npm install [-d] [loglevels]
-// dependecies / dev deps
-
-== NPM Scripts
-
-// TODO:  npm run [.....]
-// composable
-// pre/post
-
-== Publish a Node Module
-
-// TODO: npm publish
-
-// TODO: .npmrc
-// target another registry
-
-
-npm
-JavaScript package manager
-
-npm access
-Set access level on published packages
-
-npm adduser
-Add a registry user account
-
-npm audit
-Run a security audit
-
-npm bin
-Display npm bin folder
-
-npm bugs
-Bugs for a package in a web browser maybe
-
-npm cache
-Manipulates packages cache
-
-npm ci
-Install a project with a clean slate
-
-npm completion
-Tab completion for npm
-
-npm config
-Manage the npm configuration files
-
-npm dedupe
-Reduce duplication
-
-npm deprecate
-Deprecate a version of a package
-
-npm diff
-The registry diff command
-
 npm dist-tag
 Modify package distribution tags
-
-npm docs
-Docs for a package in a web browser maybe
-
-npm doctor
-Check your environments
-
-npm edit
-Edit an installed package
-
-npm exec
-Run a command from an npm package
-
-npm explain
-Explain installed packages
-
-npm explore
-Browse an installed package
-
-npm fund
-Retrieve funding information
-
-npm help
-Search npm help documentation
-
-npm help-search
-Get help on npm
-
-npm hook
-Manage registry hooks
-
-npm init
-Create a package.json file
-
-npm install
-Install a package
-
-npm install-ci-test
-Install a project with a clean slate and run tests
-
-npm install-test
-Install package(s) and run tests
 
 npm link
 Symlink a package folder
 
-npm logout
-Log out of the registry
 
-npm ls
-List installed packages
-
-npm org
-Manage orgs
-
-npm outdated
-Check for outdated packages
-
-npm owner
-Manage package owners
-
-npm pack
-Create a tarball from a package
-
-npm ping
-Ping npm registry
-
-npm prefix
-Display prefix
-
-npm profile
-Change settings on your registry profile
-
-npm prune
-Remove extraneous packages
-
-npm publish
-Publish a package
-
-npm rebuild
-Rebuild a package
-
-npm repo
-Open package repository page in the browser
-
-npm restart
-Restart a package
-
-npm root
-Display npm root
-
-npm run-script
-Run arbitrary package scripts
-
-npm search
-Search for packages
-
-npm set-script
-Set tasks in the scripts section of package.json
 
 npm shrinkwrap
 Lock down dependency versions for publication
 
-npm star
-Mark your favorite packages
+npm version
+Bump a package version
 
-npm stars
-View packages marked as favorites
+npm pack
+Create a tarball from a package
 
-npm start
-Start a package
+npm publish
+Publish a package
 
-npm stop
-Stop a package
-
-npm team
-Manage organization teams and team memberships
-
-npm test
-Test a package
-
-npm token
-Manage your authentication tokens
-
-npm uninstall
-Remove a package
+npm deprecate
+Deprecate a version of a package
 
 npm unpublish
 Remove a package from the registry
 
-npm unstar
-Remove an item from your favorite packages
 
-npm update
-Update a package
 
-npm version
-Bump a package version
 
-npm view
-View registry info
+npm adduser
+Add a registry user account
+
+npm logout
+Log out of the registry
 
 npm whoami
 Display npm username
 
-npx
-Run a command from an npm package
+
