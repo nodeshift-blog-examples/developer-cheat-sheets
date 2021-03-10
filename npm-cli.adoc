@@ -64,7 +64,7 @@ This cheat sheet covers the most common and helpful commands and flags for the n
 
 `npm login`:: Login to the registry
 
-`npm version [options]`:: Bump the version of a module
+`npm version [options] [--dry-run]`:: Bump the version of a module.  Use the `--dry-run` flag to get a preview without updating
 
 [cols="25,75"]
 |===
