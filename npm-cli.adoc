@@ -64,7 +64,7 @@ This cheat sheet covers the most common and helpful commands and flags for the n
 
 `npm login`:: Login to the registry
 
-`npm version [options] [--dry-run]`:: Bump the version of a module.  Use the `--dry-run` flag to get a preview without updating
+`npm version [options]`:: Bump the version of a module.
 
 [cols="25,75"]
 |===
@@ -101,7 +101,7 @@ This cheat sheet covers the most common and helpful commands and flags for the n
 
 `npm shrinkwrap`:: Lock down dependency versions for publication
 
-`npm publish`:: Publish a module
+`npm publish [--dry-run]`:: Publish a module.  Use the `--dry-run` flag to get a preview of what will be published
 
 `npm deprecate`:: Deprecate a version of a module
 
