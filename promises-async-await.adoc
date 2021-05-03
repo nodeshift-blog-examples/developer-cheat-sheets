@@ -1,16 +1,16 @@
 = Node.js - Promises and async/await
 
-This cheat sheet covers the basic principles of javascript promises and the async/await syntax.
+This cheat sheet covers the basic principles of JavaScript promises and the async/await syntax.
 
 == Promises
 
 The Promise object represents the eventual completion (or failure) of an asynchronous operation and its resulting value.
 
-A Promise is in one of these states:
+A promise has three states:
 
-- pending: initial state, neither fulfilled nor rejected.
-- fulfilled: meaning that the operation was completed successfully.
-- rejected: meaning that the operation failed.
+- Pending: Initial state, neither fulfilled nor rejected.
+- Fulfilled: The operation was completed successfully.
+- Rejected: The operation failed.
 
 ==== Promise
 
@@ -88,7 +88,7 @@ Promise
 
 ==== Promise.any([...promises])
 
-Takes an iterable of Promise objects and, as soon as one of the promises in the iterable fulfills, returns a single promise that resolves with the value from that promise.
+Takes an iterable of Promise objects and as soon as one of the promises in the iterable fulfills, returns a single promise that resolves with the value from that promise.
 
 ```js
 Promise
@@ -109,7 +109,7 @@ Promise
 
 == Async / Await
 
-The `async...await` syntax in ES6 offers a new way write more readable and scalable code to handle promises.
+The `async...await` syntax in ES6 offers a new way to write more readable and scalable code to handle promises.
 
 ==== Async functions
 
@@ -154,7 +154,7 @@ You can await a promise using the `await` keyword.
 })();
 ```
 
-`*Note: top-level await it's not yet supported that's why you can only use the await keyword inside an async function.*`
+`*Note: Top-level await is not yet supported. You can only use the await keyword inside an async function.*`
 
 ==== Async/Await error handling
 
