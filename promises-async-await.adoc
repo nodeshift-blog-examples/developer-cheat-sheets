@@ -1,4 +1,4 @@
-= Node.js - Promises and async/await
+= JavaScript Promises Cheat Sheet
 
 This cheat sheet covers the basic principles of JavaScript promises and the async/await syntax.
 
