@@ -1,4 +1,4 @@
-= JavaScript Promises Cheat Sheet
+= JavaScript Promises and async/await Cheat Sheet
 
 This cheat sheet covers the basic principles of JavaScript promises and the async/await syntax.
 
