@@ -1,0 +1,109 @@
+= Node.js Event Emitter Cheat Sheet
+
+This cheat sheet covers the basic principles around node.js event emitters.
+
+== Event Emitter
+
+Node.js allows us to create and handle custom events easily by using events module. Event module includes EventEmitter class which can be used to raise and handle custom events.
+
+Some modules using the event-emitter class:
+
+- Http
+- Streams
+
+==== Event Emitter Class
+
+You can get the event-emitter class from the node.js built in `events` module.
+
+```js
+const { EventEmitter } = require('events');
+
+const myEmitter = new EventEmitter();
+```
+
+==== EventEmitter.prototype.emit()
+
+Emits an event to all subscribed listeners with some data.
+
+```js
+const myEmitter = new EventEmitter();
+
+myEmitter.emit('welcome', { msg: 'Welcome to Red Hat!' });
+```
+
+==== EventEmitter.prototype.on()
+
+Listen to a specific event and it's data.
+
+```js
+myEmitter.on('welcome', (data) => console.log(data.msg));
+```
+
+==== EventEmitter.prototype.addListener()
+
+Same as the `myEmitter.on()` method.
+
+```js
+myEmitter.addListener('welcome', (data) => console.log(data.msg));
+```
+
+==== EventEmitter.prototype.once()
+
+Listen to a specific event only once.
+
+```js
+myEmitter.once('welcome', () => console.log('This will run only one time!'));
+```
+
+==== EventEmitter.prototype.removeListener()
+
+Remove a listener from the listener array for the specified event.
+
+```js
+const callback = () => {
+  console.log('someone connected!');
+};
+
+myEmitter.on('connection', callback);
+
+myEmitter.removeListener('connection', callback);
+```
+
+==== EventEmitter.prototype.removeAllListeners()
+
+Removes all listeners, or those of the specified event.
+
+```js
+myEmitter.removeAllListeners(['connection']); // receives an array of events
+```
+
+==== EventEmitter.prototype.setMaxListeners()
+
+Sets the maximum allowed listeners for a specific event. Node.js will print
+a warning if more than 10 listeners are added for a specific event.
+
+```js
+myEmitter.setMaxListeners(25);
+```
+
+==== EventEmitter.prototype.listeners()
+
+Returns all the listeners subscribed to the specified event.
+
+```js
+myEmitter.on('welcome', (data) => console.log(data.msg));
+
+myEmitter.listeners('welcome'); // returns a list of functions
+```
+
+==== EventEmitter.listenerCount()
+
+Returns the number of listeners for a given event.
+
+```js
+const myEmitter = new EventEmitter();
+
+myEmitter.on('connection', () => console.log('client connected!'));
+
+EventEmitter.listenerCount(myEmitter, 'connection'); // output: 1
+```
