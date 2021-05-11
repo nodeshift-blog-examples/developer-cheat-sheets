@@ -4,16 +4,16 @@ This cheat sheet covers the basic principles around node.js event emitters.
 
 == Event Emitter
 
-Node.js allows us to create and handle custom events easily by using events module. Event module includes EventEmitter class which can be used to raise and handle custom events.
+Node.js allows us to create and handle custom events easily by using the events module. The Event module includes the `EventEmitter` class which can be used to raise and handle custom events.
 
-Some modules using the event-emitter class:
+Some modules using the `EventEmitter` class:
 
 - Http
 - Streams
 
 ==== Event Emitter Class
 
-You can get the event-emitter class from the node.js built in `events` module.
+You can get the `EventEmitter` class from the node.js built in `events` module.
 
 ```js
 const { EventEmitter } = require('events');
@@ -28,7 +28,7 @@ Emits an event to all subscribed listeners with some data.
 ```js
 const myEmitter = new EventEmitter();
 
-myEmitter.emit('welcome', { msg: 'Welcome to Red Hat!' });
+myEmitter.emit('eventOne', { msg: 'This is a message...' });
 ```
 
 ==== EventEmitter.prototype.on()
@@ -36,7 +36,7 @@ myEmitter.emit('welcome', { msg: 'Welcome to Red Hat!' });
 Listen to a specific event and it's data.
 
 ```js
-myEmitter.on('welcome', (data) => console.log(data.msg));
+myEmitter.on('eventOne', (data) => console.log(data.msg));
 ```
 
 ==== EventEmitter.prototype.addListener()
@@ -44,15 +44,15 @@ myEmitter.on('welcome', (data) => console.log(data.msg));
 Same as the `myEmitter.on()` method.
 
 ```js
-myEmitter.addListener('welcome', (data) => console.log(data.msg));
+myEmitter.addListener('eventOne', (data) => console.log(data.msg));
 ```
 
 ==== EventEmitter.prototype.once()
 
-Listen to a specific event only once.
+Sometimes you want your application to respond to an event (or type of event) only one time (i.e., the first time the event occurs).
 
 ```js
-myEmitter.once('welcome', () => console.log('This will run only one time!'));
+myEmitter.once('eventOne', () => console.log('This callback triggers only once!'));
 ```
 
 ==== EventEmitter.prototype.removeListener()
@@ -74,13 +74,14 @@ myEmitter.removeListener('connection', callback);
 Removes all listeners, or those of the specified event.
 
 ```js
-myEmitter.removeAllListeners(['connection']); // receives an array of events
+myEmitter.removeAllListeners(['eventOne']); // receives an array of events
 ```
 
 ==== EventEmitter.prototype.setMaxListeners()
 
 Sets the maximum allowed listeners for a specific event. Node.js will print
 a warning if more than 10 listeners are added for a specific event.
+`setMaxListeners` allows you to suppress this warning.
 
 ```js
 myEmitter.setMaxListeners(25);
@@ -91,9 +92,9 @@ myEmitter.setMaxListeners(25);
 Returns all the listeners subscribed to the specified event.
 
 ```js
-myEmitter.on('welcome', (data) => console.log(data.msg));
+myEmitter.on('eventOne', (data) => console.log(data.msg));
 
-myEmitter.listeners('welcome'); // returns a list of functions
+myEmitter.listeners('eventOne'); // returns a list of functions
 ```
 
 ==== EventEmitter.listenerCount()
@@ -103,7 +104,7 @@ Returns the number of listeners for a given event.
 ```js
 const myEmitter = new EventEmitter();
 
-myEmitter.on('connection', () => console.log('client connected!'));
+myEmitter.on('eventOne', (data) => console.log(data));
 
-EventEmitter.listenerCount(myEmitter, 'connection'); // output: 1
+EventEmitter.listenerCount(myEmitter, 'eventOne'); // output: 1
 ```
