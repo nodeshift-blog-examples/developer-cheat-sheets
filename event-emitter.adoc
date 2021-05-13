@@ -81,7 +81,7 @@ myEmitter.removeAllListeners(['eventOne']); // receives an array of events
 
 Sets the maximum allowed listeners for a specific event. Node.js will print
 a warning if more than 10 listeners are added for a specific event.
-`setMaxListeners` allows you to suppress this warning.
+`setMaxListeners` allows you to modify this limit.
 
 ```js
 myEmitter.setMaxListeners(25);
@@ -97,6 +97,16 @@ myEmitter.on('eventOne', (data) => console.log(data.msg));
 myEmitter.listeners('eventOne'); // returns a list of functions
 ```
 
+==== EventEmitter.prototype.getMaxListers()
+
+Returns the current max listener value for the EventEmitter instance.
+
+```js
+myEmitter = new EventEmitter();
+
+myEmitter.getMaxListers() // defaults to 10
+```
+
 ==== EventEmitter.listenerCount()
 
 Returns the number of listeners for a given event.
@@ -107,4 +117,14 @@ const myEmitter = new EventEmitter();
 myEmitter.on('eventOne', (data) => console.log(data));
 
 EventEmitter.listenerCount(myEmitter, 'eventOne'); // output: 1
+```
+
+==== Events.defaultMaxListeners()
+
+Sets the default max listens for all EventEmitter instances. However, calling `emitter.setMaxListeners(n)` still has precedence over `events.defaultMaxListeners`
+
+```js
+const { defaultMaxListeners } = require('events');
+
+defaultMaxListeners(25);
 ```
