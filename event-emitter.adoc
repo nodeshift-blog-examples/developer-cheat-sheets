@@ -1,10 +1,10 @@
 = Node.js Event Emitter Cheat Sheet
 
-This cheat sheet covers the basic principles around node.js event emitters.
+This cheat sheet covers the basic principles around Node.js event emitters.
 
 == Event Emitter
 
-Node.js allows us to create and handle custom events easily by using the events module. The Event module includes the `EventEmitter` class which can be used to raise and handle custom events.
+Node.js allows us to create and handle custom events easily by using the `events` module. The Event module includes the `EventEmitter` class which can be used to raise and handle custom events.
 
 Some modules using the `EventEmitter` class:
 
@@ -13,7 +13,7 @@ Some modules using the `EventEmitter` class:
 
 ==== Event Emitter Class
 
-You can get the `EventEmitter` class from the node.js built in `events` module.
+You can get the `EventEmitter` class from the Node.js built in `events` module.
 
 ```js
 const { EventEmitter } = require('events');
@@ -33,7 +33,7 @@ myEmitter.emit('eventOne', { msg: 'This is a message...' });
 
 ==== EventEmitter.prototype.on()
 
-Listen to a specific event and it's data.
+Listens to a specific event and its data.
 
 ```js
 myEmitter.on('eventOne', (data) => console.log(data.msg));
