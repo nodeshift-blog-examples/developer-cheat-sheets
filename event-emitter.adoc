@@ -121,7 +121,7 @@ EventEmitter.listenerCount(myEmitter, 'eventOne'); // output: 1
 
 ==== Events.defaultMaxListeners()
 
-Sets the default max listens for all EventEmitter instances. However, calling `emitter.setMaxListeners(n)` still has precedence over `events.defaultMaxListeners`
+Sets the default max listens for all EventEmitter instances. However, calling `emitter.setMaxListeners(n)` still has precedence over `events.defaultMaxListeners`.
 
 ```js
 const { defaultMaxListeners } = require('events');
