@@ -97,14 +97,14 @@ myEmitter.on('eventOne', (data) => console.log(data.msg));
 myEmitter.listeners('eventOne'); // returns a list of functions
 ```
 
-==== EventEmitter.prototype.getMaxListers()
+==== EventEmitter.prototype.getMaxListeners()
 
 Returns the current max listener value for the EventEmitter instance.
 
 ```js
 myEmitter = new EventEmitter();
 
-myEmitter.getMaxListers() // defaults to 10
+myEmitter.getMaxListeners() // defaults to 10
 ```
 
 ==== EventEmitter.listenerCount()
