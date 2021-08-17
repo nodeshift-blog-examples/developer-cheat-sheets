@@ -1,0 +1,42 @@
+= Modules Cheat Sheet
+
+This cheat sheet covers a basic introduction to EcmaScript Modules(ESM)
+
+== ESM
+
+ECMAScript modules are the official standard format to package JavaScript code for reuse. Modules are defined using a variety of import and export statements.
+
+=== export
+
+```js
+// funTimes.mjs
+
+function funTimes() {
+  return 'Fun'
+}
+
+export { funTimes };
+```
+
+=== import
+
+```js
+// app.mjs
+
+import { funTimes } from './funTimes.mjs'
+
+funTimes();
+```
+
+=== Enabling
+
+Since Node.js treats code as CommonJS modules by default, module authors will need to tell Node.js to treat the code as ES Modules by either using the `.mjs` file extension(like above) or by using the `type` field in the package.json
+
+```js
+// pacakge.json
+
+{
+  name: 'funTimes',
+  type: 'module'
+}
+```
