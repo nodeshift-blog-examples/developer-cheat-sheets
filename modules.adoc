@@ -1,6 +1,6 @@
 = Modules Cheat Sheet
 
-This cheat sheet covers a basic introduction to EcmaScript Modules(ESM)
+This cheat sheet covers a basic introduction to ECMAScript Modules(ESM)
 
 == ESM
 
