@@ -33,7 +33,7 @@ funTimes();
 Since Node.js treats code as CommonJS modules by default, module authors will need to tell Node.js to treat the code as ES Modules by either using the `.mjs` file extension(like above) or by using the `type` field in the package.json
 
 ```js
-// pacakge.json
+// package.json
 
 {
   name: 'funTimes',
