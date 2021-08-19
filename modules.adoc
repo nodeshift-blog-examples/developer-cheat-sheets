@@ -36,7 +36,7 @@ Since Node.js treats code as CommonJS modules by default, module authors will ne
 // package.json
 
 {
-  name: 'funTimes',
-  type: 'module'
+  name: "funTimes",
+  type: "module"
 }
 ```
