@@ -40,3 +40,27 @@ Since Node.js treats code as CommonJS modules by default, module authors will ne
   type: "module"
 }
 ```
+
+=== Default Exports
+
+A *default export* allows a module to provide default function
+
+```js
+// funTimes.mjs
+
+function funTimes() {
+  return 'Fun'
+}
+
+export default funTimes;
+```
+
+Importing this default function could look something like this:
+
+```js
+// app.mjs
+
+import funTimes from './funTimes.mjs'
+
+funTimes();
+```
