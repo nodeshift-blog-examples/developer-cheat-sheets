@@ -1,15 +1,18 @@
-= Modules Cheat Sheet
+= ECMAScript Modules Cheat Sheet
 
-This cheat sheet covers a basic introduction to ECMAScript Modules(ESM)
+////
 
-== ESM
+Andy Oram: Although I edited this cheat sheet, I would really like to see it longer. Aren't there other stable features that would interest users? I checked the documentation and it was pretty long. But I also saw that most of the featuers were in the experimental stage or subject to change, so I see why we should not include them.
 
-ECMAScript modules are the official standard format to package JavaScript code for reuse. Modules are defined using a variety of import and export statements.
+////
 
-=== export
+This cheat sheet introduces ECMAScript modules (ESM), an alternative to CommonJS modules for sharing JavaScript functions in Node.js.
+
+== Exporting a module
+
+The following code exports the module in the +funTimes.mjs+ file:
 
 ```js
-// funTimes.mjs
 
 function funTimes() {
   return 'Fun'
@@ -18,19 +21,19 @@ function funTimes() {
 export { funTimes };
 ```
 
-=== import
+== Importing a function
+
+The following code imports and runs the +funTimes+ function from the +funTimes.mjs+ file:
 
 ```js
-// app.mjs
-
 import { funTimes } from './funTimes.mjs'
 
 funTimes();
 ```
 
-=== Enabling
+== Enabling ESM
 
-Since Node.js treats code as CommonJS modules by default, module authors will need to tell Node.js to treat the code as ES Modules by either using the `.mjs` file extension(like above) or by using the `type` field in the package.json
+Because Node.js treats code as CommonJS modules by default, module authors will need to tell Node.js to treat the code as ECMAScript Modules by either using the `.mjs` file extension (as shown in earlier examples) or by using the `type` field in the +package.json+ file:
 
 ```js
 // package.json
@@ -41,9 +44,9 @@ Since Node.js treats code as CommonJS modules by default, module authors will ne
 }
 ```
 
-=== Default Exports
+== Default exports
 
-A *default export* allows a module to provide default function
+A default export allows a module to provide a default function:
 
 ```js
 // funTimes.mjs
