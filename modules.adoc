@@ -6,7 +6,7 @@ Andy Oram: Although I edited this cheat sheet, I would really like to see it lon
 
 ////
 
-This cheat sheet introduces ECMAScript modules (ESM), an alternative to CommonJS modules for sharing JavaScript functions in Node.js.
+This cheat sheet introduces ECMAScript modules (ESM), an alternative to CommonJS modules for sharing functions in JavaScript programs.
 
 == Exporting a module
 
