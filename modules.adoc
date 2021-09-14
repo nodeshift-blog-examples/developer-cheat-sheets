@@ -1,6 +1,6 @@
 = ECMAScript Modules Cheat Sheet
 
-This cheat sheet introduces ECMAScript modules (ESM), an alternative to CommonJS modules for sharing functions in JavaScript programs. ESM are the future of modules in JavaScript. ESM are already the standard format for front-end development, and now can be used on the back end with recent versions of Node.js. Although the old module system (CommonJS) has worked for many years, ESM come with many benfits such as asynchronous loading, top-level await, and improved static analysis.
+This cheat sheet introduces ECMAScript modules (ESM), an alternative to CommonJS modules for sharing functions in JavaScript programs. ESM are the future of modules in JavaScript. ESM are already the standard format for front-end development, and now can be used on the back end with recent versions of Node.js. Although the old module system (CommonJS) has worked for many years, ESM come with many benefits such as asynchronous loading, top-level await, and improved static analysis.
 
 == Exporting a module
 
