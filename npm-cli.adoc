@@ -1,6 +1,6 @@
 = NPM CLI -  Commands and Flags
 
-This cheat sheet covers the most common and helpful commands and flags for the npm CLI.
+This cheat sheet covers the most common and helpful commands and flags for the npm CLI version 8.
 
 == Basic Usage
 
@@ -8,7 +8,7 @@ This cheat sheet covers the most common and helpful commands and flags for the n
 `<command> -h, --help`:: quick help on the specified command
 `-l`:: display full usage info
 
-`npx [command]`:: Run an arbitrary command from an npm module (either one installed locally, or fetched remotely)
+`npx [command]`:: Run an arbitrary command from an npm module (either one installed locally, or fetched remotely).  `npx` will prompt you if the module you are trying to run is not installed yet.
 
 == Create a new Node.js application
 
@@ -46,7 +46,7 @@ This cheat sheet covers the most common and helpful commands and flags for the n
 
 `npm update`:: Update modules to the latest version, respecting semver.
 
-`npm ls`:: List the installed modules
+`npm ls [--all]`:: List the installed top level modules.  Use the `--all` flag to list all installed modules
 
 `npm prune`:: Remove any extraneous modules
 
@@ -111,6 +111,21 @@ This cheat sheet covers the most common and helpful commands and flags for the n
 
 `npm logout`:: Log out of the registry
 
+== Workspaces
+
+Support for managing multiple packages from within a singular top-level, root package.
+
+```js
+{
+    "name": "workspace-example",
+    "version": "1.0.0",
+    "workspaces": {
+        "packages": [
+            "packages/*"
+        ]
+    }
+}
+```
 
 == Misc
 
