@@ -1,0 +1,79 @@
+= 10 Tips For Running Node.js Applications on Openshift
+
+== 1. Don’t run as root
+
+ - Running processes as root, even in containers can be a security risk, particularly if external resources are mapped into the container.
+
+ - When using docker/podman you can change the user with the USER command. Well designed base containers will have already done this, but you should always check what user will be used by default.
+
+== 2. Use UBI containers
+
+  - UBI based containers are already built-in to Openshift which is a benefit for your application since it doesn’t need to rely on an outside service, such as docker hub.
+
+  - UBI based container images already run as non-root, which ties in nicely with Tip 1
+
+
+== 3. Try to use the most minimal image you can/2 stage builds
+
+  - Best practice is to use a two stage build where a larger build image is used to build an application and then the resulting artifacts are copied to a run image. The build image includes all of the tools needed to build the application (compilers etc.) while the run image only includes what's needed for the application to run. The size difference between the build and run images can often be significant.
+
+
+== 4. Don’t use `npm start`
+
+  - While you will often see CMD ["npm", "start"] in docker files used to build Node.js applications there are a number of good reasons to avoid this:
+
+  - One less component. You generally don't need npm to start your application. If you avoid using it in the container then you will not be exposed to any security vulnerabilities that might exist in that component or its dependencies.
+
+  - One less process. Instead of running 2 processes (npm and node) you will only run 1.
+
+  - There can be issues with signals and child processes. You can read more about that in the Node.js docker best practices CMD.
+
+  - Instead use a command like `CMD ["node","index.js"]`
+
+== 5. Use Health Checks
+
+ - The first thing you need to build into your application is support for liveness and readiness endpoints. OpenShift has built-in functionality to check these endpoints:
+
+  - Liveness – restart the container when the liveness endpoint does not respond indicating the application is alive.
+  - Readiness – defer sending traffic until application is ready to accept traffic, or step sending traffic if application is no longer able to accept traffic.
+
+
+== 6. Logging
+
+  - Node.js developers also need to know how to do logging in a cloud-native environment. In container development, writing logs out to disk does not generally make sense because of the extra steps needed to make the logs available outside the container—and they will be lost once the container is stopped.
+
+  - Logging to standard out (stdout) is the Cloud native way, and structured logging (for example using JSON) is the current trend. One of my current favorite modules is pino which is a fast, structured logger and is easy to use.
+
+
+== 7. Metrics
+
+  - In an Openshift deployment your application is running in containers, there may be multiple copies of each container, and it is not necessarily easy to find or access those containers in order to gather information about how your application is running. For this reason, it is important to export the key metrics from your container that you need to understand and track the health of your application.
+
+  - Prometheus is the de facto standard on this front. It defines a set of metrics that you should export and gives you the ability to add additional application-specific metrics that are important to your business.
+
+
+== 8. Externalize secrets
+
+  - Secrets should be externalized and made available to the application at runtime through secure means.
+
+  - Using a ConfigMap can help externalize any secrets
+
+
+== 9. Don’t use privileged ports
+
+  - Ports below 1024 are considered trusted and a process must have additional privileges to be able to bind to them.
+
+  - If you follow tip 1, to build your containers as non-root then your process will not be able to bind to the trusted ports.
+
+== 10. Setting Memory Limits
+
+  - The Node.js runtime sets default memory limits for the heap which may not match what you want to use in production.
+  - Use an environment variable in your start scripts so that you can tell the Node.js runtime in the container to use a limit which matches the amount of memory you will provide to the container when it is run.
+  - The following is an example of doing so in the start script within package.json:
+
+```
+"start": "if [ -z \"$MAX_NODE_MEMORY\" ]; then export MAX_NODE_MEMORY=2048; fi; node --max-old-space-size=$MAX_NODE_MEMORY bin/app.js",
+```
+
+  - This will then allow you to configure the max-old-space-size to align with what you define in your kubernetes deployment files or set with the "--memory" option in docker run commands.
+
