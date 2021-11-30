@@ -1,5 +1,7 @@
 = 10 Tips For Running Node.js Applications on Openshift
 
+To effectively run your Node.js applications on OpenShift, try these 10 tips.
+
 == 1. Don’t run as root
 
  - Running processes as root, even in containers can be a security risk, particularly if external resources are mapped into the container.
