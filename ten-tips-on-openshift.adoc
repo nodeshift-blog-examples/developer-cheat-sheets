@@ -1,5 +1,3 @@
-// https://github.com/nodeshift/developer-cheat-sheets/blob/main/ten-tips-on-openshift.adoc
-
 = Ten Tips For Running Node.js Applications on Red Hat OpenShift
 
 To run your Node.js applications on Red Hat OpenShift effectively, try these tips.
