@@ -24,9 +24,9 @@ To run your Node.js applications on Red Hat OpenShift effectively, try these tip
 
   - Although you will often see `CMD ["npm", "start"]` in Docker files used to build Node.js applications, you should use a command like `CMD ["node","index.js"]` instead. There are a number of good reasons to avoid `npm start`:
 
-  -- One less component. You generally don't need `npm` to start your application. If you avoid using this command in the container, you will not be exposed to any security vulnerabilities that might exist in that component or its dependencies.
+-- One less component. You generally don't need `npm` to start your application. If you avoid using this command in the container, you will not be exposed to any security vulnerabilities that might exist in that component or its dependencies.
 
-  -- One less process. Instead of running two processes (`npm` and `node`) you run only one.
+-- One less process. Instead of running two processes (`npm` and `node`) you run only one.
 
   - 'npm' can lead to issues with signals and child processes. You can read more about those problems in the https://docs.docker.com/develop/develop-images/dockerfile_best-practices/[Docker best practices documentation].
 
@@ -34,8 +34,8 @@ To run your Node.js applications on Red Hat OpenShift effectively, try these tip
 
  - The first thing you need to build into your application is support for liveness and readiness endpoints. OpenShift has built-in functionality to check these endpoints:
 
-  -- Liveness: Restart the container when the liveness endpoint does not respond to indicate that the application is alive.
-  -- Readiness: Defer sending traffic until the application is ready to accept traffic, or step sending traffic if the application is no longer able to accept traffic.
+-- Liveness: Restart the container when the liveness endpoint does not respond to indicate that the application is alive.
+-- Readiness: Defer sending traffic until the application is ready to accept traffic, or step sending traffic if the application is no longer able to accept traffic.
 
 
 == 6. Logging
