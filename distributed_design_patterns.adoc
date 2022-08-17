@@ -1,15 +1,15 @@
 = Distributed transaction patterns for microservices
 
-This cheat sheet shows how to prevent duplicate records for an event or message by instituting transactions for multiple communicating services. This is a summary of the article https://developers.redhat.com/articles/2021/09/21/distributed-transaction-patterns-microservices-compared[Comparing distributed transaction patterns for microservices], which offers more background.
+This cheat sheet covers ways to institute transactions to prevent multiple communicating services from duplicating the record for an event or message. The cheat sheet is a summary of the article https://developers.redhat.com/articles/2021/09/21/distributed-transaction-patterns-microservices-compared[Distributed transaction patterns for microservices compared], which offers more background.
 
 == Modular monolith
 
-Convert services to libraries and deploy them into a shared runtime. One of the services could also act  as the shared runtime. The tables from the databases also share a single database instance, but it is separated as a group of tables managed by the respective library services <<img_monolith>>.
+To run services as a single application, convert the services to libraries. You can deploy all the services in a shared runtime or designate one of the services as the shared runtime. The tables from the databases also share a single database instance, but each library manages its own group of tables (<<img_monolith>>).
 
 [[#img_monolith]]
-.Modular monolith with a shared database.
+.The modular monolith architecture uses a shared database.
 
-// image::distributed/monolith.png[Modular monolith with a shared database.]
+// image::distributed/monolith.png[Libraries share a share database in the modular monolith architecture.]
 
 PLEASE INSERT distributed/monolith.png
 
@@ -20,13 +20,13 @@ PLEASE INSERT distributed/monolith.png
 |Simple transaction semantics with local transactions ensuring data consistency, read-your-writes, rollbacks, and so on.
 
 |Drawbacks
-|A shared runtime prevents us from independently deploying and scaling modules, and prevents failure isolation.
+|A shared runtime prevents you from independently deploying and scaling modules, and prevents failure isolation.
 
 |
-|The logical separation of tables in a single database is not strong. With time, it can turn into a shared integration layer.
+|The logical separation of tables in a single database is weak isolation. Over time, it can turn into a shared integration layer.
 
 |
-|Module coupling and sharing transaction context requires coordination during the development stage and increases the coupling between services.
+|Coupling modules and sharing transaction context requires coordination during the development stage and increases the coupling between services.
 [============
 
 == Two-phase commit
@@ -38,14 +38,14 @@ A two-phase commit is typically the last resort, used in a variety of instances:
 - When exactly-once message processing is required and you cannot refactor a system and make its operations idempotent.
 - When integrating with third-party black-box systems or legacy systems that implement the two-phase commit specification.
 
-In all of these situations, when scalability is not a concern, you might consider a two-phase commit.
+In all of these situations, if scalability is not a concern, you might consider a two-phase commit.
 
-The technical requirements for two-phase commit are that you need a distributed transaction manager such as https://narayana.io/[Narayana] and a reliable storage layer for the transaction logs. You also need https://publications.opengroup.org/standards/dist-computing/c193[DTP XA-compatible] data sources with associated XA drivers that are capable of participating in distributed transactions, such as RDBMS, message brokers, and caches. If you are lucky to have the right data sources but run in a dynamic environment, such as https://developers.redhat.com/topics/kubernetes[Kubernetes], you also need an operator-like mechanism to ensure there is only a single instance of the distributed transaction manager. The transaction manager must be highly available and must always have access to the transaction log.
+The technical requirements for two-phase commit are a distributed transaction manager such as https://narayana.io/[Narayana] and a reliable storage layer for the transaction logs. You also need https://publications.opengroup.org/standards/dist-computing/c193[Distributed Transaction Processing XA-compatible] data sources with associated XA drivers that are capable of participating in distributed transactions, such as RDBMS, message brokers, and caches. If you are lucky to have the right data sources but run in a dynamic environment, such as https://developers.redhat.com/topics/kubernetes[Kubernetes], you also need an Operator-like mechanism to ensure there is only a single instance of the distributed transaction manager. The transaction manager must be highly available and must always have access to the transaction log.
 
-<p>In our example, shown in <<img_two_phase>>, Service A is using distributed transactions to commit all changes to its database and a message to a queue without leaving any chance for duplicates or lost messages. Similarly, Service B can use distributed transactions to consume the messages and commit to Database B in a single transaction without any duplicates. Or, Service B can choose not to use distributed transactions, but use local transactions and implement the idempotent consumer pattern.
+<p>In our example, shown in <<img_two_phase>>, Service A is using distributed transactions to commit all changes to its database. The service enqueues messages without leaving any chance for duplicates or lost messages. Similarly, Service B can use distributed transactions to consume the messages and commit to Database B in a single transaction without any duplicates. Alternatively, Service B can choose not to use distributed transactions, but use local transactions and implement the idempotent consumer pattern.
 
 [[#img_two_phase]]
-.Two-phase commit spanning a database and a message broker.
+.In a two-phase commit, each service commits to its own database, while the services coordinate through a message broker.
 
 PLEASE INSERT distributed/two_phase.png
 
@@ -73,14 +73,14 @@ PLEASE INSERT distributed/two_phase.png
 
 == Orchestration
 
-In orchestration, one of the services acts as the coordinator and orchestrator of the overall distributed state change. The orchestrator service has the responsibility to call other services until they reach the desired state or take corrective actions if they fail. The orchestrator uses its local database to keep track of state changes, and it is responsible for recovering any failures related to state changes.
+In orchestration, one of the services acts as the coordinator and orchestrator of the overall distributed state changes. The orchestrator service calls other services until they reach the desired state and takes corrective actions if they fail. The orchestrator uses its local database to keep track of state changes, and is responsible for recovering any failures related to state changes.
+
+In <<img_orchestration>>, Service A acts as the stateful orchestrator, calling Service B and recovering from failures through a compensating operation if needed. The crucial characteristic of this approach is that Service A and Service B have local transaction boundaries, but Service A has the knowledge and the responsibility to orchestrate the overall interaction flow. Therefore, Service A's transaction boundary touches Service B endpoints. You can implement this architecture using synchronous interactions, as shown in the diagram, or using a message queue between the services (in which case you could use a two-phase commit, too).
 
 [[#img_orchestration]]
-.Orchestrating distributed transactions between two services.
+.Services act independently, but the orchestrating service monitors the actions of the other service.
 
 PLEASE INSERT distributed/orchestration.png
-
-In <<img_orchestration>>, Service A acts as the stateful orchestrator responsible to call Service B and recover from failures through a compensating operation if needed. The crucial characteristic of this approach is that Service A and Service B have local transaction boundaries, but Service A has the knowledge and the responsibility to orchestrate the overall interaction flow. That is why its transaction boundary touches Service B endpoints. In terms of implementation, we could set this up with synchronous interactions, as shown in the diagram, or using a message queue in between the services (in which case you could use a two-phase commit, too).
 
 .Benefits and drawbacks of orchestration.
 [cols="1","3"]
@@ -92,13 +92,13 @@ In <<img_orchestration>>, Service A acts as the stateful orchestrator responsibl
 |No need for XA transactions.
 
 |
-|Known distributed state at the coordinator level.
+|Coordinator knows the distributed state.
 
 |Drawbacks
 |Complex distributed programming model.
 
 |
-|May require idempotency and compensating operations from the participating services.
+|Might require idempotency and compensating operations from the participating services.
 
 |
 |Eventual consistency.
@@ -109,10 +109,12 @@ In <<img_orchestration>>, Service A acts as the stateful orchestrator responsibl
 
 == Choreography
 
-An alternative to orchestration is choreography, where participants exchange events without a centralized point of control. With this pattern, each service performs a local transaction and publishes events that trigger local transactions in other services. Each component of the system participates in decision-making about a business transaction's workflow, instead of relying on a central point of control. Historically, the most common implementation for the choreography approach was using an asynchronous messaging layer for the service interactions. <<#img_choreography>> illustrates the basic architecture of the choreography pattern.
+An alternative to orchestration is choreography, where participants exchange events without a centralized point of control. With this pattern, each service performs a local transaction and publishes events that trigger local transactions in other services. Each component of the system participates in decision-making about a business transaction's workflow, instead of relying on a central point of control.
+
+Historically, the most common implementation for the choreography approach used an asynchronous messaging layer for the service interactions. <<#img_choreography>> illustrates the basic architecture of the choreography pattern.
 
 [[#img_choreography]]
-.Service choreography through a messaging layer.
+.All services coordinate through a messaging layer.
 
 PLEASE INSERT distributed/choreography.png
 
@@ -121,11 +123,12 @@ PLEASE INSERT distributed/choreography.png
 [============
 |Benefits
 |Decouples implementation and interaction.
+
 |
 |No central transaction coordinator.
 
 |
-|Improved scalability and resilience characteristics.
+|Improved scalability and resilience.
 
 |
 |Near real-time interactions.
@@ -142,45 +145,47 @@ PLEASE INSERT distributed/choreography.png
 
 === Choreography with Debezium
 
-https://debezium.io/blog/2019/02/19/reliable-microservices-data-exchange-with-the-outbox-pattern/[Debezium] can perform change data capture (CDC) (<<img_debezium>>).</p>
+https://debezium.io/[Debezium] performs change data capture (CDC) (<<img_debezium>>). Debezium monitors a database's transaction log, performs any necessary filtering and transformation of the database events discovered, and delivers relevant changes into an Apache Kafka topic. This way, Service B can listen to generic events in a topic rather than polling Service A's database or API.
 
 [[#img_debezium]]
-.Service choreography with change data capture.
+.Debezium transforms events in one service's database into messages consumed by other services.
 
 PLEASE INSERT distributed/debezium.png
 
-Debezium can monitor a database's transaction log, perform any necessary filtering and transformation, and deliver relevant changes into an Apache Kafka topic. This way, Service B can listen to generic events in a topic rather than polling Service A's database or APIs.
+Swapping database polling for streaming changes and introducing a queue between the services makes the distributed system more reliable and scalable. The architecture also opens up the system to other consumers for new use cases. Debezium offers an elegant way to implement the https://debezium.io/blog/2019/02/19/reliable-microservices-data-exchange-with-the-outbox-pattern/[Outbox pattern] for orchestration-based or choreography-based implementations of the https://www.infoq.com/articles/saga-orchestration-outbox/[Saga pattern].
 
-Swapping database polling for streaming changes and introducing a queue between the services makes the distributed system more reliable, scalable, and opens up the possibility of introducing other consumers for new use cases. Using Debezium offers an elegant way to implement the https://debezium.io/blog/2019/02/19/reliable-microservices-data-exchange-with-the-outbox-pattern/[Outbox pattern] for orchestration- or choreography-based https://www.infoq.com/articles/saga-orchestration-outbox/[Saga pattern implementations].
-
-A side-effect of this approach is that it introduces the possibility of Service B receiving duplicate messages. This can be addressed by implementing the service as idempotent, either at the business logic level or with a technical deduplicator.
+A drawback of this approach is that Service B might receive duplicate messages. This problem can be addressed by implementing the service as idempotent, either at the business logic level or with a technical deduplicator.
 
 === Choreography with event sourcing
 
-Event sourcing is another implementation of the service choreography approach. With this pattern, the state of an entity is stored as a sequence of state-changing events. When there is a new update, rather than updating the entity's state, a new event is appended to the list of events. Appending new events to an event store is an atomic operation done in a local transaction. The beauty of this approach, shown in <<img_event>>, is that the event store also behaves like a message queue for other services to consume updates. Note that state-changing events in event sourcing represent the internal service state, and are not meant for external consumption without some kind of filtering and transformation.
+Event sourcing is another implementation of the service choreography approach. In this pattern, the state of an entity is stored as a sequence of state-changing events. When there is a new update, rather than updating the entity's state, a new event is appended to the list of events. Each event is appended to an event store through an atomic operation in a local transaction.
+
+The beauty of this approach, shown in <<img_event>>, is that the event store also behaves like a message queue for other services to consume updates.
 
 [[#img_event]]
-.Service choreography through event sourcing.
+.The event store receives events directly from a service and is consulted by other services.
 
 PLEASE INSERT distributed/event.png
 
-Our example, when converted to use event sourcing, would store client requests in an append-only event store. Service A can reconstruct its current state by replaying the events. The event store also needs to allow Service B to subscribe to the same update events. With this mechanism, Service A uses its storage layer also as the communication layer with other services. While this mechanism is very neat and solves the problem of reliably publishing events whenever the state change occurs, it introduces a new programming style unfamiliar to many developers and additional complexity around state reconstruction and message compaction, which require specialized data stores.
+State-changing events in event sourcing represent the internal service state, and are not meant for external consumption without some kind of filtering and transformation.
+
+Our example, when converted to use event sourcing, stores client requests in an append-only event store. Service A can reconstruct its current state by replaying the events. The event store also needs to allow Service B to subscribe to the same update events. With this mechanism, Service A uses its storage layer as the communication layer with other services. While this mechanism is very neat and solves the problem of reliably publishing events whenever the state change occurs, it introduces a new programming style unfamiliar to many developers and additional complexity around state reconstruction and message compaction, which require specialized data stores.
 
 == Parallel pipelines
 
-Choreography creates a sequential pipeline of processing services, so we know that when a message reaches a certain step of the overall process, it has passed all the previous steps. What if we could loosen this constraint and process all the steps independently? In this scenario, Service B could process a request regardless of whether Service A had processed it or not.
+Choreography creates a sequential pipeline of processing services, so you know that when a message reaches a certain step of the overall process, it has passed all the previous steps. What if you could loosen this constraint and process all the steps independently? In this scenario, Service B could process a request whether or not Service A had processed it.
 
-With parallel pipelines, we add a router service that accepts requests and forwards them to Service A and Service B through a message broker in a single local transaction. From this step onward, as shown in <<img_pipelines>>, both services can process the requests independently and in parallel.
+The parallel pipeline architecture adds a router service that accepts requests and forwards them to Service A and Service B through a message broker in a single local transaction. From this step onward, as shown in <<img_pipelines>>, both services can process the requests independently and in parallel.
 
 [[#img_pipelines]]
-.Processing through parallel pipelines.
+.Each service consumes from its own event store, and the message broker publishes to all the event stores.
 
 PLEASE INSERT distributed/pipelines.png
 
-There is a lighter alternative to this approach, known as the "listen to yourself" pattern, where one of the services also acts as the router. With this alternative approach, when Service A receives a request, it would not write to its database but would instead publish the request into the messaging system, where it is targeted to Service B, and to itself. <<img_listen>> illustrates this pattern.
+A more lightweight alternative to this approach is the "listen to yourself" pattern, where one of the services also acts as the router. With this approach, when Service A receives a request, it does not write to its database, but instead publishes the request into the messaging system, where it is targeted to both itself and to Service B. <<img_listen>> illustrates this pattern.
 
 [[#img_listen]]
-.The "Listen to yourself" pattern.
+.A service publishes events to an event store consumed by all services, including the publisher.
 
 PLEASE INSERT distributed/listen.png
 
@@ -197,29 +202,29 @@ PLEASE INSERT distributed/listen.png
 
 == How to choose a distributed transactions strategy
 
-<<img_characteristics>> offers a short summary of the main characteristics of the dual write patterns I've discussed.
+<<img_characteristics>> summarizes main characteristics of the dual write patterns discussed in this cheat sheet.
 
 [[#img_characteristics]]
 .Characteristics of dual write patterns.
 
 PLEASE INSERT distributed/characteristics.png
 
-<<img_relative>> organizes the approaches described in this article based on their data consistency and scalability attributes.
+<<img_relative>> compares data consistency and scalability or the approaches described in the cheat sheet. We can evaluate the various approaches on a scale from the most scalable and highly available to the least scalable and available.
 
 [[#img_relative]]
-.Relative data consistency and scalability characteristics of dual write patterns.
+.Dual write patterns that are more scalable offer less consistency.
 
 PLEASE INSERT distributed/relative.png
 
-We can evaluate the various approaches on a scale from the most scalable and highly available to the least scalable and available ones.
-
 === High: Parallel pipelines and choreography
 
-If your steps are temporarily decoupled, it could make sense to run them in parallel pipelines. The chances are you can apply this pattern for certain parts of the system, but not for all of them. Next, assuming there is a temporal coupling between the processing steps, and certain operations and services have to happen before others, you might consider the choreography approach. Using service choreography, it is possible to create a scalable, https://developers.redhat.com/topics/event-driven[event-driven architecture] where messages flow from service to service through a decentralized orchestration process. In this case, Outbox pattern implementations with Debezium and Apache Kafka (such as https://developers.redhat.com/products/red-hat-openshift-streams-for-apache-kafka/getting-started[Red Hat OpenShift Streams for Apache Kafka]) are particularly interesting and gaining traction.
+If your steps are temporarily decoupled, it could make sense to run them in parallel pipelines. The chances are that you can apply this pattern for certain parts of the system, but not for all of them.
+
+Next, assuming there is a temporal coupling between the processing steps, and certain operations and services have to happen before others, you might consider the choreography approach. Using service choreography, it is possible to create a scalable https://developers.redhat.com/topics/event-driven[event-driven architecture], where messages flow from service to service through a decentralized orchestration process. In this case, Outbox pattern implementations with Debezium and Apache Kafka (such as https://developers.redhat.com/products/red-hat-openshift-streams-for-apache-kafka/getting-started[Red Hat OpenShift Streams for Apache Kafka]) are particularly interesting and are gaining traction.
 
 === Medium: Orchestration and two-phase commit
 
-If choreography is not a good fit, and you need a central point that is responsible for coordination and decision making, consider orchestration. This is a popular architecture, with standard-based and custom open source implementations available. While a standard-based implementation may force you to use certain transaction semantics, a custom orchestration implementation allows you to make a trade-off between the desired data consistency and scalability.
+If choreography is not a good fit, and you need a central point that is responsible for coordination and decision making, consider orchestration. This is a popular architecture, with standard-based and custom open source implementations available. Although a standard-based implementation might force you to use certain transaction semantics, a custom orchestration implementation allows you to make a trade-off between the desired data consistency and scalability.
 
 === Low: Modular monolith
 
