@@ -1,0 +1,93 @@
+= AI and Node.js Cheat Sheet
+
+This cheat sheet covers the basic principles of writing AI applications with Node.js.
+
+== Large Language Models
+
+A Large Language Model (LLM) is a type of artificial intelligence (AI) that is trained on a massive amount of text data to understand and generate human language. LLMs are able to perform various tasks such as:
+
+* Question Answering - Answer questions based on the data they were trained on.
+* Text Summarization- Condense large amounts of texts into succicent summaries.
+* Language Translation - Translate between different languages.
+* Content Generation - Generate new forms of content like text, articles and stories.
+* Conversational AI - They can be used to create Chatbots.
+
+=== Choosing The Right Model
+
+Choosing which model to use can be specific to the usecase of the application or the organization using it.  However, When choosing a LLM it is important to look at these different factors:
+
+* Performance Metrics - The model should be able to generate accurate and contextually relevant responses.
+
+* Scalability - Can accomodate various workloads and scale in the future to ensure it is viable in the long-term
+
+* Resource Requirements - What type of infrastructure is required.
+
+* Configurability -  Can the model be customized to your organization’s specific needs.
+
+* Licenses - Which data has the model been trained on and is that data copy-right protected.
+
+https://huggingface.co/[Hugging Face] is a great site to discover and compare models
+
+When in doubt, it is recommended to choose a model that is Opensource, such as https://www.ibm.com/granite[granite].
+
+== Model Server
+
+A model inference server acts as a bridge between the model and its users, receiving data, processing it with the model, and returning the results. These servers are often optimized for speed and efficiency, especially when dealing with complex models or large datasets.
+
+There are two popular model inference servers that can help you get started locally:
+
+=== Ollama
+
+https://ollama.com/[Ollama] is a tool that lets you run and manage large language models (LLMs) on your own computer, rather than relying on cloud-based services.  It supports a wide range of open-source LLMs, allowing you to experiment with different models without needing a license
+
+=== Podman AI Lab
+
+https://podman-desktop.io/docs/ai-lab[Podman AI Lab] simplifies the process of running and experimenting with AI models locally by providing containerized model servers, a user-friendly interface, and tools for easy integration into your applications.
+
+== Client
+
+AI client libraries are packages or modules that provide pre-written code for interacting with AI APIs or services. They simplify the process of using AI technologies by abstracting away the low-level details of communication and providing easy-to-use functions
+
+Here are a list of popular AI client libraries:
+
+* https://js.langchain.com/docs/introduction/[langchain.js] - A framework for developing applications powered by language models.  It contains an abstraction layer that helps developers use multiple language models seemlessly.
+
+* https://langchain-ai.github.io/langgraphjs/[langgraph.js] - A low-level framework for building controllable agents
+
+* https://github.com/meta-llama/llama-stack-client-typescript[llama-stack-client-typescript] - This library provides convenient access to the Llama Stack Client REST API from server-side TypeScript or JavaScript.
+
+== Core Concepts
+
+=== Chatbots
+
+A chatbot is a computer program that simulates human conversation with an end user. While not all chatbots use AI ,modern chatbots increasingly use conversational AI techniques such as natural language processing to understand user questions and automate responses to them.
+
+==== A simple Chatbot with Langchain.js
+
+```js
+  const model = getModel();
+
+  const prompt = ChatPromptTemplate.fromMessages([
+    [ 'system',  'You are a helpful assistant'],
+    [ 'human', '{input}' ]
+  ]);
+
+  const chain = prompt.pipe(model);
+  const response = await chain.invoke({
+    input: 'What is the weather today?'
+  });
+
+  return response;
+```
+
+=== Retrieval Augmented Generation (RAG)
+
+RAG is a process for optimizing the performance of an AI model by connecting it with external knowledge bases. RAG helps large language models (LLMs) deliver more relevant responses at a higher quality.
+
+=== Agents / Tool Calling
+
+AI tools are software applications that utilize artificial intelligence algorithms to perform tasks that typically require human intelligence, such as analyzing data, recognizing patterns, and making decisions. These tools can automate processes, improve decision-making, and enhance various aspects of different industries
+
+=== MCP
+
+MCP is a protocol that allows intergratrion between LLMs and tools, often as part of an agent.  One of the interesting aspect of MCP is that tools hosted in a server can be consumed by different frameworks and even frameworks that use a different language from which the server was written
