@@ -84,9 +84,55 @@ A chatbot is a computer program that simulates human conversation with an end us
 
 RAG is a process for optimizing the performance of an AI model by connecting it with external knowledge bases. RAG helps large language models (LLMs) deliver more relevant responses at a higher quality.
 
+```js
+    // Define a system prompt that tells the model how to use the retrieved context
+    const systemPrompt = `You are an assistant for question-answering tasks.
+    Use the following pieces of retrieved context to answer the question.
+    Context: {context}:`;
+
+    // Define a question
+    const question =
+      "What are the main components of an LLM-powered autonomous agent system?";
+
+    // Retrieve relevant documents
+    const docs = await retriever.invoke(question);
+
+    // Combine the documents into a single string
+    const docsText = docs.map((d) => d.pageContent).join("");
+
+    // Populate the system prompt with the retrieved context
+    const systemPromptFmt = systemPrompt.replace("{context}", docsText);
+
+    // get a model
+    const model = getModel();
+
+    // Generate a response
+    const response = await model.invoke([
+      {
+        role: "system",
+        content: systemPromptFmt,
+      },
+      {
+        role: "user",
+        content: question,
+      },
+    ]);
+
+    return response
+```
+
 === Agents / Tool Calling
 
 AI tools are software applications that utilize artificial intelligence algorithms to perform tasks that typically require human intelligence, such as analyzing data, recognizing patterns, and making decisions. These tools can automate processes, improve decision-making, and enhance various aspects of different industries
+
+```js
+  // Tool creation
+  const tools = [myTool];
+  // Tool binding
+  const modelWithTools = model.bindTools(tools);
+  // Tool calling
+  const response = await modelWithTools.invoke(userInput);
+```
 
 === MCP
 
